@@ -14,23 +14,16 @@ import { Toaster } from "@/components/ui/toaster"
 import { ServiceCard3D } from "./service-card-3d"
 import { FloatingCart } from "./floating-cart"
 import { SuccessModal } from "./success-modal"
+import { WhatsAppCheckout } from "./whatsapp-checkout"
 import { Search, Send, ChevronDown } from "lucide-react"
 import Image from "next/image"
 
 export function ServiceSelectionForm() {
   const [selectedServices, setSelectedServices] = useState<string[]>([])
-  const [contactInfo, setContactInfo] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    company: "",
-    message: "",
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const [showSuccessModal, setShowSuccessModal] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
   const [activeCategory, setActiveCategory] = useState<string | null>(null)
-  const [showContactForm, setShowContactForm] = useState(false)
+  const [showWhatsAppCheckout, setShowWhatsAppCheckout] = useState(false)
 
   const { toast } = useToast()
 
@@ -52,48 +45,8 @@ export function ServiceSelectionForm() {
     )
   }
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setContactInfo((prev) => ({ ...prev, [name]: value }))
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-
-    if (selectedServices.length === 0) {
-      toast({
-        title: "No services selected",
-        description: "Please select at least one service to continue.",
-        variant: "destructive",
-      })
-      return
-    }
-
-    setIsSubmitting(true)
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-
-    // Show success modal
-    setShowSuccessModal(true)
-
-    // Reset form
-    setContactInfo({
-      name: "",
-      email: "",
-      phone: "",
-      company: "",
-      message: "",
-    })
-    setIsSubmitting(false)
-  }
-
-  // Auto-scroll to contact form when services are selected
-  useEffect(() => {
-    if (selectedServices.length > 0 && !showContactForm) {
-      setShowContactForm(true)
-    }
-  }, [selectedServices, showContactForm])
+  // Replace with your sales team's WhatsApp number (international format without + or spaces)
+  const salesTeamPhone = "916260852317"
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
@@ -202,132 +155,8 @@ export function ServiceSelectionForm() {
           )}
         </div>
 
-        {/* Contact form */}
-        <AnimatePresence>
-          {showContactForm && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.5 }}
-              className="overflow-hidden"
-            >
-              <motion.div
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="bg-white rounded-xl shadow-xl border border-gray-100 p-6 mb-8"
-              >
-                <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-2xl font-bold text-ampl-black flex items-center gap-2">
-                    <span className="inline-block w-8 h-8 rounded-full bg-ampl-green text-white text-center font-bold">
-                      2
-                    </span>
-                    Your Information
-                  </h2>
-                  <Button variant="ghost" size="sm" onClick={() => setShowContactForm(false)} className="text-gray-400">
-                    <ChevronDown size={20} />
-                  </Button>
-                </div>
-
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="name" className="text-ampl-black">
-                        Full Name <span className="text-ampl-red">*</span>
-                      </Label>
-                      <Input
-                        id="name"
-                        name="name"
-                        value={contactInfo.name}
-                        onChange={handleInputChange}
-                        placeholder="John Doe"
-                        required
-                        className="border-gray-200 focus:border-ampl-green focus:ring-ampl-green"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="email" className="text-ampl-black">
-                        Email Address <span className="text-ampl-red">*</span>
-                      </Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={contactInfo.email}
-                        onChange={handleInputChange}
-                        placeholder="john@example.com"
-                        required
-                        className="border-gray-200 focus:border-ampl-green focus:ring-ampl-green"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="phone" className="text-ampl-black">
-                        Phone Number <span className="text-ampl-red">*</span>
-                      </Label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        value={contactInfo.phone}
-                        onChange={handleInputChange}
-                        placeholder="+1 (555) 123-4567"
-                        required
-                        className="border-gray-200 focus:border-ampl-green focus:ring-ampl-green"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="company" className="text-ampl-black">
-                        Company Name
-                      </Label>
-                      <Input
-                        id="company"
-                        name="company"
-                        value={contactInfo.company}
-                        onChange={handleInputChange}
-                        placeholder="ACME Inc."
-                        className="border-gray-200 focus:border-ampl-green focus:ring-ampl-green"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="message" className="text-ampl-black">
-                      Additional Information
-                    </Label>
-                    <Textarea
-                      id="message"
-                      name="message"
-                      value={contactInfo.message}
-                      onChange={handleInputChange}
-                      placeholder="Tell us more about your project or specific requirements..."
-                      className="border-gray-200 focus:border-ampl-green focus:ring-ampl-green min-h-[100px]"
-                    />
-                  </div>
-
-                  <div className="flex justify-center pt-4">
-                    <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                      <Button
-                        type="submit"
-                        disabled={isSubmitting || selectedServices.length === 0}
-                        className="bg-ampl-green hover:bg-ampl-green/90 text-white px-8 py-6 text-lg rounded-md flex items-center gap-2"
-                      >
-                        {isSubmitting ? "Submitting..." : "Submit Request"}
-                        {!isSubmitting && <Send size={18} />}
-                      </Button>
-                    </motion.div>
-                  </div>
-                </form>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
         {/* Call to action when no services selected */}
-        {selectedServices.length === 0 && !showContactForm && (
+        {selectedServices.length === 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -346,17 +175,14 @@ export function ServiceSelectionForm() {
       <FloatingCart
         selectedServices={selectedServices}
         services={services}
-        onSendToSales={() => {
-          if (showContactForm) {
-            // Scroll to form
-            document.querySelector("form")?.scrollIntoView({ behavior: "smooth" })
-          } else {
-            setShowContactForm(true)
-            setTimeout(() => {
-              document.querySelector("form")?.scrollIntoView({ behavior: "smooth" })
-            }, 100)
-          }
-        }}
+        onSendToSales={() => setShowWhatsAppCheckout(true)}
+      />
+
+      {/* WhatsApp checkout modal */}
+      <WhatsAppCheckout
+        isOpen={showWhatsAppCheckout}
+        onClose={() => setShowWhatsAppCheckout(false)}
+        salesTeamPhone={salesTeamPhone}
       />
 
       {/* Success modal */}
@@ -365,7 +191,6 @@ export function ServiceSelectionForm() {
         onClose={() => {
           setShowSuccessModal(false)
           setSelectedServices([])
-          setShowContactForm(false)
         }}
       />
 
